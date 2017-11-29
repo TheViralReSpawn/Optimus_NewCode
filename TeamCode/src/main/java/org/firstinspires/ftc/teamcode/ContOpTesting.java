@@ -73,6 +73,16 @@ public class ContOpTesting extends LinearOpMode {
     static final double oMINl = 0.01;
     static final double oMAXl = 0.65;
 
+    ///////////////////////////////////
+
+    static final double aMINr = 0.1;
+    static final double aMAXr = 0.95;
+
+    static final double aMINl = 0.1;
+    static final double aMAXl = 0.95;
+
+
+
     final double    ogSpeed      = 0.05 ;                            // sets rate to move servo
 
     final double    bgmSpeed     = 0.10 ;
@@ -191,6 +201,19 @@ public class ContOpTesting extends LinearOpMode {
 
 
         //config.blockGrabber.setPower(blockGrab);
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        if (gamepad1.a) {                //Opens
+            config.atlPos = aMINl;
+            config.atrPos = aMAXr;
+        } else if (gamepad1.b) {          //Closes
+            config.atlPos = aMAXl;
+            config.atrPos = aMINr;
+        } else {
+            config.atlPos = config.oglPos;
+            config.atrPos = config.ogrPos;
+        }
 
         //////////////////////////////////////////////////////////////////////////////////////
 

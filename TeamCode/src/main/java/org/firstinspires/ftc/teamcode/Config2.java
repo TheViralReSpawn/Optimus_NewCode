@@ -46,12 +46,17 @@ public class Config2 {
     DcMotor driveLeft;
     DcMotor driveRight;
 
+    Servo atl;
+    Servo atr;
 
     double          bglPos;                  // Servo safe position
     double          bgrPos;                  // Servo safe position
 
     double oglPos;
     double ogrPos;
+
+    double atlPos;
+    double atrPos;
 
     public Config2(final LinearOpMode opMode) {
         this.opMode = opMode;
@@ -94,6 +99,16 @@ public class Config2 {
 
         ///////////////////////
 
+        atl = hardwareMap.servo.get("atl");
+        atl.setDirection(Servo.Direction.FORWARD);
+        atlPos = 0.1;
+
+        atr = hardwareMap.servo.get("atr");
+        atr.setDirection(Servo.Direction.REVERSE);
+        atrPos = 0.95;
+
+        ///////////////////////
+
         blockGrabber = hardwareMap.dcMotor.get("blockGrabber");
         blockGrabber.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -131,8 +146,8 @@ public class Config2 {
         telemetry.addData("Guy Grabber Servo Left", bgl.getPosition());
         telemetry.addData("Guy Grabber Servo Right", bgr.getPosition());
 
-        //telemetry.addData("Block Grabber Servo Left", ogl.getPosition());
-        //telemetry.addData("Block Grabber Servo Right", ogr.getPosition());
+        telemetry.addData("Block Grabber Servo Left", atl.getPosition());
+        telemetry.addData("Block Grabber Servo Right", atr.getPosition());
 
         //telemetry.addData("Block Grabber Motor", blockGrabber.getPower());
 
