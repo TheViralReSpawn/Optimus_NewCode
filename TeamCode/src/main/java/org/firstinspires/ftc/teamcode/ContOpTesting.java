@@ -35,6 +35,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Config2;
+
+import static org.firstinspires.ftc.teamcode.Config2.aMAXl;
+import static org.firstinspires.ftc.teamcode.Config2.aMAXr;
+import static org.firstinspires.ftc.teamcode.Config2.aMINl;
+import static org.firstinspires.ftc.teamcode.Config2.aMINr;
+import static org.firstinspires.ftc.teamcode.Config2.oMAXl;
+import static org.firstinspires.ftc.teamcode.Config2.oMAXr;
+import static org.firstinspires.ftc.teamcode.Config2.oMINl;
+import static org.firstinspires.ftc.teamcode.Config2.oMINr;
 //potato
 
 /**
@@ -67,20 +76,7 @@ public class ContOpTesting extends LinearOpMode {
 
     final double    bgSpeed      = 0.02 ;                            // sets rate to move servo
 
-    static final double oMINr = 0.09;
-    static final double oMAXr = 0.95;
-
-    static final double oMINl = 0.01;
-    static final double oMAXl = 0.65;
-
     ///////////////////////////////////
-
-    static final double aMINr = 0.1;
-    static final double aMAXr = 0.95;
-
-    static final double aMINl = 0.1;
-    static final double aMAXl = 0.95;
-
 
 
     final double    ogSpeed      = 0.05 ;                            // sets rate to move servo
@@ -107,7 +103,7 @@ public class ContOpTesting extends LinearOpMode {
 
     }
 
-    public void setDefaults()  {
+    public void setDefaults() {
 
         ////////////////////////////Drive Motors/////////////////////////////////////////////////
 
@@ -125,37 +121,39 @@ public class ContOpTesting extends LinearOpMode {
         config.driveLeft.setPower(-gamepad1.left_stick_y);
         config.driveRight.setPower(gamepad1.right_stick_y);
 
-        ////////////////////////////Guy Grabber Motors///////////////////////////////////////////
+        ////////////////////////////Roller Grabber Motors///////////////////////////////////////////
 
-        float velocity = -gamepad2.right_stick_y;
+        if (!gamepad1.y) {
+            config.rollerLeft.setPower(1.0);
+            config.rollerRight.setPower(1.0);
+        } else if (!gamepad1.x) {
+            config.rollerLeft.setPower(-1.0);
+            config.rollerRight.setPower(-1.0);
+        } else {
+            config.rollerLeft.setPower(0.0);
+            config.rollerRight.setPower(0.0);
+        }
 
-        config.guyGrabberLeft.setPower(velocity);
-        config.guyGrabberRight.setPower(velocity);
+        if (gamepad1.right_stick_y > 0.0) {
+            config.raiserLeft.setPower(gamepad1.right_stick_y);
+            config.raiserLeft.setPower(gamepad1.right_stick_y);
+        } else if (gamepad1.right_stick_y < 0.0) {
+            config.raiserLeft.setPower(gamepad1.right_stick_y);
+            config.raiserLeft.setPower(gamepad1.right_stick_y);
+        } else {
+            config.raiserLeft.setPower(0.0);
+            config.raiserLeft.setPower(0.0);
+        }
 
 
         ////////////////////////////Block Grabber & Tilting Servos///////////////////////////////
 
-        if (gamepad1.left_trigger > 0.0) {
-            config.oglPos += ogSpeed * (double) gamepad1.left_trigger;
-            config.ogrPos += ogSpeed * (double) gamepad1.left_trigger;
-        } else if (gamepad1.right_trigger > 0.0) {
-            config.oglPos -= ogSpeed * (double) gamepad1.right_trigger;
-            config.ogrPos -= ogSpeed * (double) gamepad1.right_trigger;
-        } else {
-            config.oglPos = config.oglPos;
-            config.oglPos = config.oglPos;
-        }
-
-
-         if (gamepad1.left_bumper) {                //Opens
-            config.oglPos = oMINl;
-            config.ogrPos = oMAXr;
-        } else if (gamepad1.right_bumper) {          //Closes
-            config.oglPos = oMAXl;
-            config.ogrPos = oMINr;
-        } else {
-            config.oglPos = config.oglPos;
-            config.ogrPos = config.ogrPos;
+        if (gamepad1.left_bumper) {
+            config.oglPos = 1;
+            config.ogrPos = 1;
+        } else if (gamepad1.right_bumper) {
+            config.oglPos = 0;
+            config.ogrPos = 0;
         }
 
         //-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~//
@@ -164,66 +162,25 @@ public class ContOpTesting extends LinearOpMode {
 
         ////////////////////////////Guy Grabber Servo Left & Right////////////////////////////////
 
-        if (gamepad2.right_trigger > 0.0) {
-            config.bglPos += bgSpeed * gamepad2.right_trigger;
-            config.bgrPos -= bgSpeed * gamepad2.right_trigger;
-        } else if (gamepad2.left_trigger > 0.0) {
-            config.bglPos -= bgSpeed * gamepad2.left_trigger;
-            config.bgrPos += bgSpeed * gamepad2.left_trigger;
-        } else {
-            config.bglPos = config.bglPos;
-            config.bgrPos = config.bgrPos;
-        }
-
 
         ///////////////////////////Block Grabber Motor /////////////////////////////////////////
 
-        float blockGrab = gamepad2.left_stick_y;
 
         //////////////////////////Touch Sensor ////////////////////////////////////////////////
-
-        if (!config.touchBottom.getState()) {
-            telemetry.addData("Bottom touch sensor is: ", " TRUE!");
-            telemetry.addData("Top touch sensor is: ", " FALSE!");
-
-            blockGrabCode(1,0);
-        } else if (!config.touchTop.getState()) {
-            telemetry.addData("Top touch sensor is: ", " TRUE!");
-            telemetry.addData("Bottom touch sensor is: ", " FALSE!");
-
-            blockGrabCode(0,-1);
-        }  else {
-            telemetry.addData("Top touch sensor is: ", " FALSE!");
-            telemetry.addData("Bottom touch sensor is: ", " FALSE!");
-
-            blockGrabCode(1,-1);
-        }
-
 
         //config.blockGrabber.setPower(blockGrab);
 
         //////////////////////////////////////////////////////////////////////////////////////
 
-        if (gamepad1.a) {                //Opens
-            config.atlPos = aMINl;
-            config.atrPos = aMAXr;
-        } else if (gamepad1.b) {          //Closes
-            config.atlPos = aMAXl;
-            config.atrPos = aMINr;
-        } else {
-            config.atlPos = config.oglPos;
-            config.atrPos = config.ogrPos;
+        if (gamepad1.b) {                //Opens
+            config.atlPos = 1;
+            config.atrPos = 1;
+        } else if (gamepad1.a) {          //Closes
+            config.atlPos = 0;
+            config.atrPos = 0;
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
-
-        // Move both servos to new position.
-        config.bglPos = Range.clip(config.bglPos, MIN, MAX);
-        config.bgl.setPosition(config.bglPos);
-
-        config.bgrPos = Range.clip(config.bgrPos, MIN, MAX);
-        config.bgr.setPosition(config.bgrPos);
-
 
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -233,22 +190,20 @@ public class ContOpTesting extends LinearOpMode {
         config.ogrPos = Range.clip(config.ogrPos, oMINr, oMAXr);
         config.ogr.setPosition(config.ogrPos);
 
+
+
+        config.atlPos = Range.clip(config.atlPos, aMINl, aMAXl);
+        config.atl.setPosition(config.atlPos);
+
+        config.atrPos = Range.clip(config.atrPos, aMINr, aMAXr);
+        config.atr.setPosition(config.atrPos);
+
+
         //telemetry.addData("Bottom touch sensor state", myState);
         config.fullTelemetry();
 
         /*------------------------------------------------------------------------------*/
 
-
-    }
-
-    public void blockGrabCode(int a, int b) {
-        if (gamepad1.dpad_down) {
-            config.blockGrabber.setPower( a );
-        } else if (gamepad1.dpad_up) {
-            config.blockGrabber.setPower( b );
-        } else {
-            config.blockGrabber.setPower(0);
-        }
     }
 
 }

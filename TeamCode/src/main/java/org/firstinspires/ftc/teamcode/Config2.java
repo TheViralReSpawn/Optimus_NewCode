@@ -22,35 +22,20 @@ public class Config2 {
     private LinearOpMode opMode;
     private Telemetry telemetry;
 
-
-
-    Servo bgl; //These are actuall for the guy grabber.
-    Servo bgr;
-
     Servo ogl;
     Servo ogr;
 
-
-
-    DcMotor blockGrabber;
-
-    DigitalChannel touchBottom;
-    DigitalChannel touchTop;
-
-
-
-    DcMotor guyGrabberLeft;
-    DcMotor guyGrabberRight;
-
+    DcMotor rollerLeft;
+    DcMotor rollerRight;
 
     DcMotor driveLeft;
     DcMotor driveRight;
 
+    DcMotor raiserRight;
+    DcMotor raiserLeft;
+
     Servo atl;
     Servo atr;
-
-    double          bglPos;                  // Servo safe position
-    double          bgrPos;                  // Servo safe position
 
     double oglPos;
     double ogrPos;
@@ -58,7 +43,20 @@ public class Config2 {
     double atlPos;
     double atrPos;
 
-    public Config2(final LinearOpMode opMode) {
+    static final double aMINr = 0.1;
+    static final double aMAXr = 0.7;
+
+    static final double aMINl = 0.1;
+    static final double aMAXl = 0.7;
+
+
+    static final double oMINr = 0.09;
+    static final double oMAXr = 0.95;
+
+    static final double oMINl = 0.01;
+    static final double oMAXl = 0.65;
+
+    public Config2 (final LinearOpMode opMode) {
         this.opMode = opMode;
         this.hardwareMap = opMode.hardwareMap;
         this.telemetry = opMode.telemetry;
@@ -72,20 +70,17 @@ public class Config2 {
         driveRight = hardwareMap.dcMotor.get("driveRight");
         driveLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
+        rollerLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        guyGrabberLeft = hardwareMap.dcMotor.get("guyGrabberLeft");
-        guyGrabberLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        rollerRight = hardwareMap.dcMotor.get("rollerRight");
+        rollerRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        guyGrabberRight = hardwareMap.dcMotor.get("guyGrabberRight");
-        guyGrabberRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        raiserLeft = hardwareMap.dcMotor.get("raiserLeft");
+        raiserLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        bgl = hardwareMap.servo.get("bgl");
-        bgl.setDirection(Servo.Direction.FORWARD);
-        bglPos = 0.1;
-
-        bgr = hardwareMap.servo.get("bgr");
-        bgr.setDirection(Servo.Direction.REVERSE);
-        bgrPos = 0.95;
+        raiserRight = hardwareMap.dcMotor.get("raiserRight");
+        raiserRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /////////////////////////////
 
@@ -94,31 +89,18 @@ public class Config2 {
         oglPos = 0.65;
 
         ogr = hardwareMap.servo.get("ogr");
-        ogr.setDirection(Servo.Direction.FORWARD);
+        ogr.setDirection(Servo.Direction.REVERSE);
         ogrPos = 0.09;
 
         ///////////////////////
 
         atl = hardwareMap.servo.get("atl");
-        atl.setDirection(Servo.Direction.FORWARD);
-        atlPos = 0.1;
+        atl.setDirection(Servo.Direction.REVERSE);
 
         atr = hardwareMap.servo.get("atr");
-        atr.setDirection(Servo.Direction.REVERSE);
-        atrPos = 0.95;
+        atr.setDirection(Servo.Direction.FORWARD);
 
         ///////////////////////
-
-        blockGrabber = hardwareMap.dcMotor.get("blockGrabber");
-        blockGrabber.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        touchBottom = hardwareMap.get(DigitalChannel.class, "touchBottom");
-        touchBottom.setMode(DigitalChannel.Mode.INPUT);
-
-        touchTop = hardwareMap.get(DigitalChannel.class, "touchTop");
-        touchTop.setMode(DigitalChannel.Mode.INPUT);
-        touchBottom.setState(true);
-
 
     }
 
@@ -140,14 +122,8 @@ public class Config2 {
         telemetry.addData("Left Drive Motors", driveLeft.getPower());
         telemetry.addData("Right Drive Motors", driveRight.getPower());
 
-        telemetry.addData("Guy Grabber Left", guyGrabberLeft.getPower());
-        telemetry.addData("Guy Grabber Right", guyGrabberRight.getPower());
-
-        telemetry.addData("Guy Grabber Servo Left", bgl.getPosition());
-        telemetry.addData("Guy Grabber Servo Right", bgr.getPosition());
-
-        telemetry.addData("Block Grabber Servo Left", atl.getPosition());
-        telemetry.addData("Block Grabber Servo Right", atr.getPosition());
+        telemetry.addData("ATL Servo Left", atl.getPosition());
+        telemetry.addData("ATR Servo Right", atr.getPosition());
 
         //telemetry.addData("Block Grabber Motor", blockGrabber.getPower());
 
